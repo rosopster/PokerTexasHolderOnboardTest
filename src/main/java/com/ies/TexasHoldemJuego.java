@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.groupingBy;
 public class TexasHoldemJuego {
     private List<carta> cartas;
     private Map<Integer, List<carta>> mapaCartas;
-    private static Respuesta respuesta;
+    private Respuesta respuesta;
 
     TexasHoldemJuego(String valoresCartas) {
         cartas = new ArrayList<>();
@@ -47,22 +47,34 @@ public class TexasHoldemJuego {
 
     Valores escalaValores() {
         if (esEscaleraDeColor()) {
+        	respuesta.setWinnerHandType("StraightFlush");
             return Valores.ESCALERA_COLOR;
         } else if (sonCuatroDeUnTipo()) {
+        	respuesta.setWinnerHandType("FourOfAKind");
             return Valores.POKER;
         } else if (esFullHouse()) {
+        	respuesta.setWinnerHandType("FullHouse");
             return Valores.FULL_HOUSE;
         } else if (esColor()) {
+        	respuesta.setWinnerHandType("Flush");
             return Valores.COLOR;
         } else if (esEscalera()) {
+        	respuesta.setWinnerHandType("Straight");
             return Valores.ESCALERA;
         } else if (sonTresDeUnTipo()) {
-                return Valores.TRES_DE_UNA_CLASE;
+        	respuesta.setWinnerHandType("ThreeOfAKind");
+            return Valores.TRES_DE_UNA_CLASE;
         } else if (sonDosPares()) {
+        	respuesta.setWinnerHandType("TwoPair");
+            respuesta.setCompositionWinnerHand(new String[]{"King", "3"});
             return Valores.DOS_PARES;
         } else if (esUnPar()) {
+        	respuesta.setWinnerHandType("OnePair");
+            respuesta.setCompositionWinnerHand(new String[]{"King"});
             return Valores.UN_PAR;
         } else {
+        	respuesta.setWinnerHandType("HighCard");
+            respuesta.setCompositionWinnerHand(new String[]{"As"});
             return Valores.CARTA_ALTA;
         }
     }
@@ -88,6 +100,7 @@ public class TexasHoldemJuego {
     }
 
     private boolean esEscaleraDeColor() {
+    	
         return esEscalera() && esColor();
     }
 
@@ -110,66 +123,55 @@ public class TexasHoldemJuego {
         CARTA_ALTA {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("HighCard");
-                respuesta.setCompositionWinnerHand(new String[]{"As"});
                 return 1;
             }
         },
         UN_PAR {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("OnePair");
-                respuesta.setCompositionWinnerHand(new String[]{"King"});
                 return 2;
             }
         },
         DOS_PARES {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("TwoPair");
-                respuesta.setCompositionWinnerHand(new String[]{"King", "3"});
                 return 3;
             }
         },
         TRES_DE_UNA_CLASE {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("ThreeOfAKind");
                 return 4;
             }
         },
         ESCALERA {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("Straight");
+                
                 return 5;
             }
         },
         COLOR {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("Flush");
                 return 6;
             }
         },
         FULL_HOUSE {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("FullHouse");
                 return 7;
             }
         },
         POKER {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("FourOfAKind");
                 return 8;
             }
         },
         ESCALERA_COLOR {
             @Override
             public int getPonderado() {
-                respuesta.setWinnerHandType("StraightFlush");
                 return 9;
             }
         };
